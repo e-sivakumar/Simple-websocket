@@ -1,0 +1,88 @@
+#root {
+  max-width: 1280px;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  /* padding: 2rem; */
+  text-align: center;
+}
+/* client/src/App.css */
+
+body {
+  background: #0b141a;
+  font-family: Arial;
+  margin: 0;
+  padding: 0;
+  /* color: white; */
+}
+
+.container {
+  background: #1f2c34;
+  /* padding: 20px; */
+  /* border-radius: 10px; */
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.chat-box {
+  /* background: #121b22; */
+  /* height: 400px; */
+  background: url('/bg.jpg');
+  filter: brightness(0.8);
+  overflow-y: auto;
+  /* padding: 10px; */
+  display: flex;
+  flex-direction: column;
+}
+.chat-fader {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100px; /* Adjust height to control the fade area size */
+  background: linear-gradient(to top, #1f2c34 25%, transparent 100%);
+  pointer-events: none; /* IMPORTANT: Allows mouse clicks/scrolls to pass through */
+}
+
+.message {
+  padding: 10px 15px;
+  margin: 5px 0;
+  max-width: 75%;
+  border-radius: 20px;
+  word-wrap: break-word;
+}
+
+.message.client {
+  align-self: flex-end;
+  background-color: #005c4b;
+  color: white;
+}
+
+.message.server {
+  align-self: flex-start;
+  background-color: #202c33;
+  color: white;
+}
+
+.input-container {
+  display: flex;
+  gap: 10px;
+}
+
+input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+}
+
+button {
+  background: #00a884;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
