@@ -7,6 +7,12 @@
   text-align: center;
 }
 /* client/src/App.css */
+.bg-chat-pattern {
+  background-color: #efeae2;
+  background-image: url("https://i.imgur.com/4M7IWwP.png");
+  background-repeat: repeat;
+}
+
 
 body {
   background: #0b141a;
