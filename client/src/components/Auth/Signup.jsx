@@ -3,7 +3,7 @@ import { AppContext } from "../../context/AppContext";
 
 export default function Signup({onSwitch}) {
   const { signup } = useContext(AppContext);
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [form, setForm] = useState({ name: "", userName: "", password: "" });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,11 +22,11 @@ export default function Signup({onSwitch}) {
           onChange={(e) => setForm({ ...form, name: e.target.value })}
         />
         <input
-          type="email"
-          placeholder="Email"
+          type="text"
+          placeholder="User name"
           className="w-full mb-3 p-2 border rounded"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          value={form.userName}
+          onChange={(e) => setForm({ ...form, userName: e.target.value })}
         />
         <input
           type="password"
@@ -44,7 +44,7 @@ export default function Signup({onSwitch}) {
               className="text-blue-600 cursor-pointer"
               onClick={onSwitch}
             >
-              Sign up
+              Sign in
             </span>
           </p>
       </form>

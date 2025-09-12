@@ -7,6 +7,8 @@ import toast from "react-hot-toast";
 
 export const AppContext = createContext();
 
+const basePath = import.meta.env.VITE_BACKEND_ENDPOINT || "http://localhost:5000"
+
 export function AppProvider({ children }) {
   const [token, setToken] = useState(getToken());
   const [user, setUser] = useState(null);
@@ -65,7 +67,7 @@ export function AppProvider({ children }) {
 
   // --- Socket ---
   const initSocket = (tok) => {
-    const s = io("http://localhost:5000", { auth: { token: tok } });
+    const s = io(basePath, { auth: { token: tok } });
 
     s.on("connect", () => {
       s.emit("authenticate", tok);
