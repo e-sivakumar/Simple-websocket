@@ -101,7 +101,7 @@ export function AppProvider({ children }) {
       const list = prev[receiverId] || [];
       return {
         ...prev,
-        [receiverId]: [...list, { sender: user.id, receiverId, content }],
+        [receiverId]: [...list, { sender: user.id, receiverId, content, createdAt: new Date() }],
       };
     });
   };

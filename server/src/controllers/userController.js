@@ -6,12 +6,10 @@ const { createToken } = require("../services/jwt");
 module.exports = {
   signUp: async (req, res) => {
     try {
-        console.log("req", req.body)
         if (!req.body) {
             return res.status(400).send("Invalid arguments");
           }
       const { userName, password, name } = req.body;
-      console.log("sadasd", userName, password, name)
       if (!userName || !password || !name) {
         return res.status(400).send("Invalid arguments");
       }
@@ -20,7 +18,6 @@ module.exports = {
         return res.status(400).send("Username already exists");
       }
       const hashedPassword = await bcryptFunctions.hashPassword(password);
-      console.log("has", hashedPassword)
       if(!hashedPassword) {
         return res.status(400).send("Invalid password");
       }
@@ -76,12 +73,11 @@ module.exports = {
   },
   updateSocket: async (id, socketId)=>{
     try{
-       const d = await userCollection.findOneAndUpdate({_id: id}, {
+       await userCollection.findOneAndUpdate({_id: id}, {
             $set:{
                 socketId
             }
         });
-        console.log("da",d)
     }
     catch(err){
         console.log("err", err)

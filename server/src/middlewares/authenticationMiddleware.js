@@ -19,7 +19,6 @@ module.exports = {
             const token = req.headers.authorization?.split(' ')[1];
             if (!token) return res.status(401).json({ message: 'Unauthorized' });
             const data = validateToken(token)
-            console.log("data", data)
             if(data){
                req.user = data;
                next()

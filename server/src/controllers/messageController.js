@@ -45,7 +45,6 @@ module.exports = {
                 ]
             },
         ).sort({createdAt: 1});
-        console.log("mess", messages)
         res.status(200).send({messages})
         }
         catch (err) {

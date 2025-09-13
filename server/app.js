@@ -46,13 +46,11 @@ const io = new Server(server, {
 // });
 
 io.on('connection', (socket) => {
-  console.log('🔌 User connected:', socket.id);
 
   // 🔑 Authenticate user with token after connecting
   socket.on('authenticate', async (token) => {
     try {
       const data = validateJWT(token); // extract payload
-      console.log("da", data)
       if (!data || !data.id) {
         console.log("❌ Invalid token for socket:", socket.id);
         socket.emit("app_error", { message: "Authentication failed" });
@@ -62,7 +60,6 @@ io.on('connection', (socket) => {
 
       const userId = data.id;
       await updateSocket(userId, socket.id);
-      console.log(`✅ User ${userId} authenticated with socket ${socket.id}`);
       socket.data.userId = userId; // store in memory for later
     } catch (err) {
       console.error("Auth error:", err);
@@ -97,12 +94,9 @@ io.on('connection', (socket) => {
         io.to(receiverSocketId).emit("receive_message", {
           sender: from,
           content,
-          timestamp: new Date()
+          createdAt: new Date()
         });
-        console.log(`📨 Message from ${from} -> ${to} delivered`);
-      } else {
-        console.log(`💤 User ${to} offline, message stored`);
-      }
+      } 
 
       // Acknowledge sender
       socket.emit("message_sent", { to, content });
@@ -119,7 +113,6 @@ io.on('connection', (socket) => {
       const userId = socket.data?.userId;
       if (userId) {
         await disconnectUser(userId);
-        console.log(`⚡ User ${userId} disconnected, socket ${socket.id} cleared`);
       } else {
         console.log(`⚡ Unknown user disconnected, socket ${socket.id}`);
       }

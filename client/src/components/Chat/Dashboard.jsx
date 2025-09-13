@@ -21,7 +21,9 @@ export default function Dashboard() {
       {/* Chat Area */}
       <div className="flex-1 flex flex-col">
         <div className="bg-gray-800 text-white p-4 flex justify-between items-center md:hidden">
-          <button onClick={() => setSidebarOpen(true)}>☰</button>
+          <button onClick={() => setSidebarOpen(true)}>
+            <img src="/menu.png" alt="" className="w-10 h-10" />
+          </button>
           <span>{user?.name}</span>
           <button onClick={logout}>Logout</button>
         </div>

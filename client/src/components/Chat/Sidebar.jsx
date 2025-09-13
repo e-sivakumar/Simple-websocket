@@ -13,9 +13,21 @@ export default function Sidebar({ closeSidebar }) {
           <Avatar name={user?.name || "Me"} />
           <span className="font-bold">{user?.name}</span>
         </div>
+        <div className="flex flex-col gap-2 items-end ">
+        <button 
+        className="block md:hidden bg-slate-100 p-2 rounded-full cursor-pointer "
+        onClick={
+          ()=>{
+            closeSidebar()
+          }
+        }
+        >
+          <img src="/close.png" className="w-5 h-5" alt="" />
+        </button>
         <button onClick={logout} className="text-sm text-red-500">
           Logout
         </button>
+        </div>
       </div>
 
       {/* Users List */}
