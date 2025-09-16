@@ -11,7 +11,10 @@ export default function Sidebar({ closeSidebar }) {
       <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center gap-2">
           <Avatar name={user?.name || "Me"} />
-          <span className="font-bold">{user?.name}</span>
+          <span className="font-bold">
+            {/* {user?.name} */}
+            {(user?.name).slice(0,1).toUpperCase()+(user?.name).slice(1)}
+            </span>
         </div>
         <div className="flex flex-col gap-2 items-end ">
         <button 
@@ -42,7 +45,10 @@ export default function Sidebar({ closeSidebar }) {
             }}
           >
             <Avatar name={u.name} />
-            <span>{u.name}</span>
+            <span>
+              {/* {u.name} */}
+              {(u?.name).slice(0,1).toUpperCase()+(u?.name).slice(1)}
+              </span>
           </div>
         ))}
       </div>

@@ -12,18 +12,19 @@ export default function MessageInput() {
   };
 
   return (
-    <div className="p-3 flex items-center gap-2 border-t bg-white">
+    <div className=" p-1 md:p-3 flex items-center gap-2 border-t bg-white">
       <input
         type="text"
-        className="flex-1 border rounded px-3 py-2"
+        className="flex-1 text-xs md:text-base border rounded px-2 py-2"
         placeholder="Type a message..."
         value={text}
         onChange={(e) => setText(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleSend()}
+        autoFocus
       />
        <button
         onClick={handleSend}
-        className="bg-green-600 text-white px-4 py-2 rounded-full"
+        className="bg-green-600 text-white px-3 py-2 rounded-full"
       >
         ➤
       </button>
