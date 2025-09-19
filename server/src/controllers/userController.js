@@ -1,5 +1,6 @@
 const { v4: uuidv4 } = require("uuid");
 const userCollection = require("../models/userModel");
+const messageCollection = require("../models/messageModel");
 const bcryptFunctions = require("../services/bcrypt");
 const { createToken } = require("../services/jwt");
 
@@ -62,8 +63,59 @@ module.exports = {
         if(!user.id){
             return res.status(401).send("Unauthorised user")
         }
-        const users = await userCollection.find({_id:{$ne: user.id}});
-        const userNames = users.map(user=> ({name: user.name, id: user._id}));
+        const users = await userCollection.find(
+          {_id:{$ne: user.id}},
+          {
+            name:1,
+            userName:1,
+            socketId: 1
+          }
+        );
+
+        const latestMessages = await messageCollection.aggregate([
+          {
+            $match: {
+              $or: [
+                { sender: user.id },
+                { receiver: user.id }
+              ]
+            }
+          },
+          { $sort: { createdAt: -1 } },
+          {
+            $group: {
+              _id: {
+                $cond: [
+                  { $eq: ["$sender", user.id] },
+                  "$receiver", 
+                  "$sender"
+                ]
+              },
+              latestMessage: { $first: "$content" }, 
+              latestMessageTime: { $first: "$createdAt" }
+            }
+          }
+        ]);
+    
+        // Convert aggregation to a map for quick lookup
+        const messageMap = {};
+        latestMessages.forEach(m => {
+          messageMap[m._id] = {
+            content: m.latestMessage,
+            createdAt: m.latestMessageTime
+          };
+        });
+        
+        const userNames = users.map(user=> (
+          {
+            name: user.name, 
+            id: user._id, 
+            isOnline: !!user.socketId, 
+            latestMessage: messageMap[user._id]?.content || null,
+            latestMessageTime: messageMap[user._id]?.createdAt || null
+          }
+          ));
+        
         res.status(200).send({users:userNames})
     }
     catch(err){
@@ -75,7 +127,8 @@ module.exports = {
     try{
        await userCollection.findOneAndUpdate({_id: id}, {
             $set:{
-                socketId
+                socketId,
+                updatedAt: new Date()
             }
         });
     }

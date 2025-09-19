@@ -109,7 +109,6 @@ export default function ChatWindow({ sidebarOpen, toggleSidebar }) {
 
   const chatMessages = messages[activeUser.id] || [];
   const groups = groupMessagesByDate(chatMessages);
-  console.log("groups", groups)
 
   return (
     <div className="flex flex-col flex-1 h-full" 
@@ -123,7 +122,7 @@ export default function ChatWindow({ sidebarOpen, toggleSidebar }) {
       
       {/* Header */}
       <div className="flex items-center gap-2 p-3 border-b bg-white">
-        <Avatar name={activeUser.name} />
+        <Avatar name={activeUser.name} isOnline={activeUser.isOnline} />
         <span className="font-bold">
           {/* {activeUser.name} */}
           {(activeUser?.name).slice(0,1).toUpperCase()+(activeUser?.name).slice(1)}
@@ -143,7 +142,7 @@ export default function ChatWindow({ sidebarOpen, toggleSidebar }) {
          {groups.map((group) => (
           <div key={group.dateKey}>
             {/* Date divider */}
-            <div className="flex justify-center">
+            <div className="sticky top-0 z-10 flex justify-center ">
               <div className="bg-gray-200 text-gray-600 text-[0.6rem] md:text-xs px-3 py-1 rounded-full my-3">
                 {group.dateLabel}
               </div>

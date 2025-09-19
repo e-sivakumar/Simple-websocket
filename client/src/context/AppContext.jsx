@@ -25,7 +25,7 @@ export function AppProvider({ children }) {
       setToken(res.data.token);
       toast.success("Login successful!");
     } catch (err) {
-      toast.error(err.response?.data?.message || "Login failed");
+      toast.error(err.response?.data || "Login failed");
     }
   };
 
@@ -34,7 +34,7 @@ export function AppProvider({ children }) {
       await api.post("/user/sign-up", data);
       toast.success("Signup successful! Please login.");
     } catch (err) {
-      toast.error(err.response?.data?.message || "Signup failed");
+      toast.error(err.response?.data || "Signup failed");
     }
   };
 
@@ -57,7 +57,14 @@ export function AppProvider({ children }) {
 
   const fetchUsers = async () => {
     const res = await api.get("/user/list");
-    setUsers(res.data.users);
+    const data = res.data.users || [];
+    const result = [...data].sort((a, b) => {
+      const timeA = a.latestMessageTime ? new Date(a.latestMessageTime).getTime() : 0;
+      const timeB = b.latestMessageTime ? new Date(b.latestMessageTime).getTime() : 0;
+  
+      return timeB - timeA;
+    });
+    setUsers(result);
   };
 
   const fetchMessages = async (receiverId) => {
@@ -78,6 +85,22 @@ export function AppProvider({ children }) {
         const list = prev[msg.sender] || [];
         return { ...prev, [msg.sender]: [...list, msg] };
       });
+      setUsers((prev)=>{
+        const updatedList = prev.map((user)=>{
+          if(user.id === msg.sender){
+            return {
+              ...user,
+              latestMessage: msg.content,
+              latestMessageTime: msg.createdAt
+            }
+          }
+          else{
+            return user
+          }
+        })
+        updatedList.sort((a,b)=> new Date(b.latestMessageTime) - new Date(a.latestMessageTime))
+        return updatedList
+      })
     });
 
     s.on("app_error", (err) => {
@@ -104,6 +127,22 @@ export function AppProvider({ children }) {
         [receiverId]: [...list, { sender: user.id, receiverId, content, createdAt: new Date() }],
       };
     });
+    setUsers((prev)=>{
+      const updatedList = prev.map((user)=>{
+        if(user.id === receiverId){
+          return {
+            ...user,
+            latestMessage: content,
+            latestMessageTime: new Date()
+          }
+        }
+        else{
+          return user
+        }
+      })
+      const result = updatedList.sort((a,b)=> new Date(b.latestMessageTime) - new Date(a.latestMessageTime))
+      return result
+    })
   };
 
   // --- Bootstrap ---

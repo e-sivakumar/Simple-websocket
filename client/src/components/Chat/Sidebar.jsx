@@ -4,7 +4,52 @@ import Avatar from "../Shared/Avatar";
 
 export default function Sidebar({ closeSidebar }) {
   const { users, setActiveUser, logout, user } = useContext(AppContext);
-
+  // const convertTime = (givenDate)=>{
+  //   const date = new Date(givenDate);
+  //   const timeOnly = date.toLocaleTimeString([], {
+  //     hour: "2-digit",
+  //     minute: "2-digit",
+  //     hour12: true,
+  //   });
+  //   return timeOnly
+  // }
+  const formatDateOrTime = (givenDate) => {
+    const date = new Date(givenDate);
+    const now = new Date();
+  
+    // Normalize to midnight for day-based comparison
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+  
+    const target = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  
+    // Difference in days
+    const diffTime = today - target;
+    const diffDays = diffTime / (1000 * 60 * 60 * 24);
+  
+    if (target.getTime() === today.getTime()) {
+      // Today → time only
+      return date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+    } else if (target.getTime() === yesterday.getTime()) {
+      // Yesterday
+      return "Yesterday";
+    } else if (diffDays < 7) {
+      // Within this week range → weekday name
+      return date.toLocaleDateString([], { weekday: "long" });
+    } else {
+      // Older → DD/MM/YYYY
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    }
+  };
+  
   return (
     <div className="h-full flex flex-col">
       {/* Profile + Logout */}
@@ -36,19 +81,35 @@ export default function Sidebar({ closeSidebar }) {
       {/* Users List */}
       <div className="flex-1 overflow-y-auto">
         {users.map((u) => (
+          <div 
+          className="flex flex-col 
+          hover:bg-gray-100
+          hover:drop-shadow-lg
+          rounded-xl
+           cursor-pointer p-3 my-1 w-full"
+          onClick={() => {
+            setActiveUser(u);
+            closeSidebar();
+          }}
+           >
           <div
             key={u.id}
-            className="flex items-center gap-2 p-3 hover:bg-gray-100 cursor-pointer"
-            onClick={() => {
-              setActiveUser(u);
-              closeSidebar();
-            }}
+            className="flex gap-2 p-0  w-full"
           >
-            <Avatar name={u.name} />
-            <span>
+            <Avatar name={u.name} isOnline={u.isOnline} />
+            <div className="flex flex-col w-full px-1 max-w-[80%] ">
+            <div className="flex w-full justify-between">
               {/* {u.name} */}
-              {(u?.name).slice(0,1).toUpperCase()+(u?.name).slice(1)}
-              </span>
+              <span className=" max-w-[50%] truncate"> 
+                {(u?.name).slice(0,1).toUpperCase()+(u?.name).slice(1)}
+                 </span>
+          {u?.latestMessageTime &&<div className=" " >{formatDateOrTime(u.latestMessageTime)}</div>}
+
+              </div>
+          {u?.latestMessage &&<div className=" w-[70%] truncate " >{u.latestMessage}</div>}
+          </div>
+
+          </div>
           </div>
         ))}
       </div>
